@@ -310,7 +310,58 @@ obj/linux64/Release/src/main.o: src/main.cpp \
  /home/peko/Frameworks/of/libs/openFrameworks/video/ofGstVideoPlayer.h \
  /home/peko/Frameworks/of/libs/openFrameworks/3d/ofCamera.h \
  /home/peko/Frameworks/of/libs/openFrameworks/3d/ofEasyCam.h src/ofApp.h \
- src/shapefil.h
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUI.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIDefines.h \
+ /home/peko/Frameworks/of/addons/ofxXmlSettings/src/ofxXmlSettings.h \
+ /home/peko/Frameworks/of/addons/ofxXmlSettings/libs/tinyxml.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIWidget.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIWrapper.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIOFWrapper.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIUtils.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIRectangle.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIWidgetWithLabel.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIEventArgs.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUISlider.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIButton.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIToggle.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIWidgets.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUILabel.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIFPS.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIImageSlider.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIFPSSlider.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIMinimalSlider.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUICircleSlider.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIBiLabelSlider.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIRangeSlider.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIMultiImageButton.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIMultiImageToggle.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIRadio.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUI2DPad.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUI2DGraph.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUITextInput.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUITextArea.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUINumberDialer.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUILabelButton.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUILabelToggle.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIDragableLabelButton.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUISortableList.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIToggleMatrix.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIImageButton.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIImageToggle.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIRotarySlider.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUISpacer.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIDropDownList.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIWaveform.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUISpectrum.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIMovingGraph.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIValuePlotter.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIImage.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIBaseDraws.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIImageSampler.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUICanvas.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUIScrollableCanvas.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUISuperCanvas.h \
+ /home/peko/Frameworks/of/addons/ofxUI/src/ofxUITabBar.h src/shapefil.h
 
 /home/peko/Frameworks/of/libs/openFrameworks/ofMain.h:
 
@@ -967,5 +1018,109 @@ obj/linux64/Release/src/main.o: src/main.cpp \
 /home/peko/Frameworks/of/libs/openFrameworks/3d/ofEasyCam.h:
 
 src/ofApp.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUI.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIDefines.h:
+
+/home/peko/Frameworks/of/addons/ofxXmlSettings/src/ofxXmlSettings.h:
+
+/home/peko/Frameworks/of/addons/ofxXmlSettings/libs/tinyxml.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIWidget.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIWrapper.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIOFWrapper.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIUtils.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIRectangle.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIWidgetWithLabel.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIEventArgs.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUISlider.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIButton.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIToggle.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIWidgets.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUILabel.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIFPS.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIImageSlider.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIFPSSlider.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIMinimalSlider.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUICircleSlider.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIBiLabelSlider.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIRangeSlider.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIMultiImageButton.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIMultiImageToggle.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIRadio.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUI2DPad.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUI2DGraph.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUITextInput.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUITextArea.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUINumberDialer.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUILabelButton.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUILabelToggle.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIDragableLabelButton.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUISortableList.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIToggleMatrix.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIImageButton.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIImageToggle.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIRotarySlider.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUISpacer.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIDropDownList.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIWaveform.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUISpectrum.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIMovingGraph.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIValuePlotter.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIImage.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIBaseDraws.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIImageSampler.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUICanvas.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUIScrollableCanvas.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUISuperCanvas.h:
+
+/home/peko/Frameworks/of/addons/ofxUI/src/ofxUITabBar.h:
 
 src/shapefil.h:

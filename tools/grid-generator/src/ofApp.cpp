@@ -1,14 +1,41 @@
 #include "ofApp.h"
 
+
+void ofApp::reprojectPaths() {
+
+    char buf[256];
+
+    pjFromStr = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
+    sprintf(buf, "+proj=laea +lat_0=%f +lon_0=%f +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs", lat, lng);
+    pjToStr  = (string) buf;
+
+    // projections
+    if (!(pjFrom = pj_init_plus(pjFromStr.c_str())) )
+       ofExit(1);
+    if (!(pjTo = pj_init_plus(pjToStr.c_str())) )
+       ofExit(1);
+}
+
 //--------------------------------------------------------------
 void ofApp::setup() {
     
+    gui0 = new ofxUISuperCanvas("Controls");
+
+    lng = 0.0;
+    lat = 0.0;
+
+    gui0->addSpacer();
+    gui0->addLabel("Projection point");
+    gui0->addSlider("Lng", -180.0, 180.0, &lng);
+    gui0->addSlider("Lat",  -90.0,  90.0, &lat);
+    gui0->autoSizeToFitWidgets();
+    ofAddListener(gui0->newGUIEvent,this,&ofApp::guiEvent);
+
     ofSetVerticalSync(true);
     ofSetDepthTest(true);
 
     pjFromStr = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
     pjToStr   = "+proj=laea +lat_0=90 +lon_0=90 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
-    // mesh.load("lofi-bunny.ply");
 
     // projections
     if (!(pjFrom = pj_init_plus(pjFromStr.c_str())) )
@@ -42,7 +69,7 @@ void ofApp::setup() {
             adfMinBound[2],
             adfMinBound[3],
             adfMaxBound[0],
-            adfMaxBound[1],
+            adfMaxBound[1], 
             adfMaxBound[2],
             adfMaxBound[3] );
 
@@ -55,49 +82,49 @@ void ofApp::setup() {
     for( i = 0; i < nEntities && !bHeaderOnly; i++ ) {
 
         int  j;
-        SHPObject *psShape;
+        SHPObject *shp;
 
-        psShape = SHPReadObject( hSHP, i );
+        shp = SHPReadObject( hSHP, i );
 
-        if( psShape == NULL ) {
+        if( shp == NULL ) {
             fprintf( stderr, "Unable to read shape %d, terminating object reading.\n", i );
             break;
         }
 
 
-
-        if( psShape->bMeasureIsUsed ) {
+        if( shp->bMeasureIsUsed ) {
             /*
             printf( "\nShape:%d (%s)  nVertices=%d, nParts=%d\n"
                     "  Bounds:(%.15g,%.15g, %.15g, %.15g)\n"
                     "      to (%.15g,%.15g, %.15g, %.15g)\n",
-                    i, SHPTypeName(psShape->nSHPType),
-                    psShape->nVertices, psShape->nParts,
-                    psShape->dfXMin, psShape->dfYMin,
-                    psShape->dfZMin, psShape->dfMMin,
-                    psShape->dfXMax, psShape->dfYMax,
-                    psShape->dfZMax, psShape->dfMMax );
+                    i, SHPTypeName(shp->nSHPType),
+                    shp->nVertices, shp->nParts,
+                    shp->dfXMin, shp->dfYMin,
+                    shp->dfZMin, shp->dfMMin,
+                    shp->dfXMax, shp->dfYMax,
+                    shp->dfZMax, shp->dfMMax );
             */
         } else {
             /*
             printf( "\nShape:%d (%s)  nVertices=%d, nParts=%d\n"
                     "  Bounds:(%.15g,%.15g, %.15g)\n"
                     "      to (%.15g,%.15g, %.15g)\n",
-                    i, SHPTypeName(psShape->nSHPType),
-                    psShape->nVertices, psShape->nParts,
-                    psShape->dfXMin, psShape->dfYMin,
-                    psShape->dfZMin,
-                    psShape->dfXMax, psShape->dfYMax,
-                    psShape->dfZMax );
+                    i, SHPTypeName(shp->nSHPType),
+                    shp->nVertices, shp->nParts,
+                    shp->dfXMin, shp->dfYMin,
+                    shp->dfZMin,
+                    shp->dfXMax, shp->dfYMax,
+                    shp->dfZMax );
             */
         }
 
-        if( psShape->nParts > 0 && psShape->panPartStart[0] != 0 ) {
+        if( shp->nParts > 0 && shp->panPartStart[0] != 0 ) {
             fprintf( stderr, "panPartStart[0] = %d, not zero as expected.\n",
-                     psShape->panPartStart[0] );
+                     shp->panPartStart[0] );
         }
 
         ofPath* path = new ofPath();
+
         ofPath* projectedPath = new ofPath();
         //path->setFilled(false);
         projectedPath->setFilled(false);
@@ -107,42 +134,42 @@ void ofApp::setup() {
 
 
         int oldiPart=-1;
-        for( j = 0, iPart = 1; j < psShape->nVertices; j++ ) {
+        for( j = 0, iPart = 1; j < shp->nVertices; j++ ) {
             const char  *pszPartType = "";
 
-            if( j == 0 && psShape->nParts > 0 )
-                pszPartType = SHPPartTypeName( psShape->panPartType[0] );
+            if( j == 0 && shp->nParts > 0 )
+                pszPartType = SHPPartTypeName( shp->panPartType[0] );
 
-            if( iPart < psShape->nParts
-                && psShape->panPartStart[iPart] == j ) {
-                pszPartType = SHPPartTypeName( psShape->panPartType[iPart] );
+            if( iPart < shp->nParts
+                && shp->panPartStart[iPart] == j ) {
+                pszPartType = SHPPartTypeName( shp->panPartType[iPart] );
                 iPart++;
                 pszPlus = "+";
             }
             else pszPlus = " ";
 
-            if( psShape->bMeasureIsUsed ) {
+            if( shp->bMeasureIsUsed ) {
                 /*
                 printf("   %s (%.15g,%.15g, %.15g, %.15g) %s \n",
                        pszPlus,
-                       psShape->padfX[j],
-                       psShape->padfY[j],
-                       psShape->padfZ[j],
-                       psShape->padfM[j],
+                       shp->padfX[j],
+                       shp->padfY[j],
+                       shp->padfZ[j],
+                       shp->padfM[j],
                        pszPartType );
                 */
             } else {
                 /*
                 printf("   %s (%.15g,%.15g, %.15g) %s \n",
                        pszPlus,
-                       psShape->padfX[j],
-                       psShape->padfY[j],
-                       psShape->padfZ[j],
+                       shp->padfX[j],
+                       shp->padfY[j],
+                       shp->padfZ[j],
                        pszPartType );
                 */
                 float R = 200.0;
-                double lng = psShape->padfX[j]*DEG_TO_RAD;
-                double lat = psShape->padfY[j]*DEG_TO_RAD;
+                double lng = shp->padfX[j]*DEG_TO_RAD;
+                double lat = shp->padfY[j]*DEG_TO_RAD;
                 float x = R*cos(lat)*cos(lng);
                 float y = R*cos(lat)*sin(lng);
                 float z = R*sin(lat);
@@ -172,7 +199,7 @@ void ofApp::setup() {
         }
 
         if( bValidate ) {
-            int nAltered = SHPRewindObject( hSHP, psShape );
+            int nAltered = SHPRewindObject( hSHP, shp );
 
             if( nAltered > 0 )
             {
@@ -188,7 +215,7 @@ void ofApp::setup() {
         shapes.push_back(path);
         projectedShapes.push_back(projectedPath);
 
-        SHPDestroyObject( psShape );
+        SHPDestroyObject( shp );
     }
 
     printf("MBR\n   min: %f, %f;\n   max: %f, %f\n", mbrXmin, mbrYmin, mbrXmax, mbrYmax);
@@ -205,13 +232,18 @@ void ofApp::setup() {
 }
 
 //--------------------------------------------------------------
+void ofApp::exit() {
+    delete gui0;
+}
+
+//--------------------------------------------------------------
 void ofApp::update() {
 
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-    
+
     ofBackgroundGradient(ofColor(64), ofColor(0));
 
     ofSetColor(255);
@@ -219,33 +251,38 @@ void ofApp::draw() {
     ofDrawBitmapString(pjFromStr,10,20);
     ofDrawBitmapString(pjToStr  ,10,40);
 
+    // gui0->draw();
 
     double s=-768.0/abs(mbrYmax-mbrYmin);
-    ofTranslate(1024/2, 768/2, 0);
-    ofScale(-s,s,1.0);
+    
+    ofPushMatrix();
 
-    for(vector< ofPath* >::iterator shape = projectedShapes.begin(); shape != projectedShapes.end(); ++shape) {
-        (*shape)->draw();
-    }
+        ofTranslate(1024/2, 768/2, 0);
+        ofScale(-s,s,1.0);
 
-    // for(vector< ofPath* >::iterator shape = shapes.begin(); shape != shapes.end(); ++shape) {
-    //  (*shape)->draw();
-    // }
+        for(vector< ofPath* >::iterator shape = projectedShapes.begin(); shape != projectedShapes.end(); ++shape) {
+            (*shape)->draw();
+        }
 
-    cam.begin();
+        // for(vector< ofPath* >::iterator shape = shapes.begin(); shape != shapes.end(); ++shape) {
+        //  (*shape)->draw();
+        // }
 
-    ofSetColor(255,255,255,20);
-    sphere.drawWireframe();
-    //mesh.drawWireframe();
+        cam.begin();
 
-    //glPointSize(2);
-    //ofSetColor(ofColor::white);
-    //mesh.drawVertices();
+        ofSetColor(255,255,255,20);
+        sphere.drawWireframe();
+        //mesh.drawWireframe();
 
-    //for(vector< ofPath* >::iterator shape = shapes.begin(); shape != shapes.end(); ++shape) {
-    //  (*shape)->draw();
-    //}
-    cam.end();
+        //glPointSize(2);
+        //ofSetColor(ofColor::white);
+        //mesh.drawVertices();
+
+        //for(vector< ofPath* >::iterator shape = shapes.begin(); shape != shapes.end(); ++shape) {
+        //  (*shape)->draw();
+        //}
+        cam.end();
+    ofPopMatrix();        
 
 
     /*
@@ -282,55 +319,66 @@ void ofApp::draw() {
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key)
-{
+void ofApp::keyPressed(int key) {
+
+    switch (key)  {
+        // case 'p': {
+        //     drawPadding = !drawPadding; 
+        //     gui0->setDrawWidgetPadding(drawPadding);          
+        //     }
+        //     break;
+            
+        case 'g': {
+            gui0->toggleVisible(); 
+            }
+            break; 
+        default:
+            break;
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::keyReleased(int key) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key)
-{
+void ofApp::mouseMoved(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y)
-{
+void ofApp::mouseDragged(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button)
-{
+void ofApp::mousePressed(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button)
-{
+void ofApp::mouseReleased(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button)
-{
+void ofApp::windowResized(int w, int h) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::windowResized(int w, int h)
-{
+void ofApp::gotMessage(ofMessage msg) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg)
-{
+void ofApp::dragEvent(ofDragInfo dragInfo) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo)
-{
-
+void ofApp::guiEvent(ofxUIEventArgs &e) {
+    // printf("UI Event\n");
+    reprojectPaths();
 }

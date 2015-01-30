@@ -1,15 +1,17 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxUI.h"
 #include "shapefil.h"
 #include "proj_api.h"
 
-class ofApp : public ofBaseApp
-{
+class ofApp : public ofBaseApp {
 public:
+
     void setup();
     void update();
     void draw();
+    void exit();
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -20,6 +22,8 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
+
+    void reprojectPaths();
 
     // shape file
     SHPHandle	hSHP;
@@ -43,5 +47,11 @@ public:
     projPJ pjFrom, pjTo;
 
     string pjFromStr, pjToStr;
+
+    float lng, lat;
+
+    ofxUISuperCanvas *gui0;
+    void guiEvent(ofxUIEventArgs &e);
+
 
 };
