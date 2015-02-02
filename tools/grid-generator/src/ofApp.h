@@ -33,8 +33,8 @@ public:
     int         bHeaderOnly;
     const char 	*pszPlus;
     double 	adfMinBound[4], adfMaxBound[4];
-    vector<ofPath*> shapes;
-    vector<ofPath*> projectedShapes;
+    vector<ofPath> shapes;
+    vector<ofPath> projectedShapes;
 
 	ofIcoSpherePrimitive sphere;
 

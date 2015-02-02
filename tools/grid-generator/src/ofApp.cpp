@@ -85,14 +85,14 @@ void ofApp::parseShapeFile(string fname) {
         }
 
 
-        ofPath* path = new ofPath();
-
-        ofPath* projectedPath = new ofPath();
+        ofPath path;
+        ofPath projectedPath;
+        
         //path->setFilled(false);
-        projectedPath->setFilled(false);
-        projectedPath->setStrokeWidth(1);
-        path->setFillColor(ofColor(rand()/2.0+0.5, rand()/2.0+0.5, rand()/2.0+0.5, 224));
-        projectedPath->setFillColor(ofColor(rand()/2.0+0.5, rand()/2.0+0.5, rand()/2.0+0.5, 224));
+        projectedPath.setFilled(false);
+        projectedPath.setStrokeWidth(1);
+        path.setFillColor(ofColor(rand()/2.0+0.5, rand()/2.0+0.5, rand()/2.0+0.5, 224));
+        projectedPath.setFillColor(ofColor(rand()/2.0+0.5, rand()/2.0+0.5, rand()/2.0+0.5, 224));
 
 
         vector<geo> gshape;
@@ -155,11 +155,11 @@ void ofApp::parseShapeFile(string fname) {
                 //    printf("lng: %f, lat: %f\n", lng, lat);
 
                 if(oldiPart == iPart) {
-                    path->lineTo(x,y,z);
-                    projectedPath->lineTo(lng, lat);
+                    path.lineTo(x,y,z);
+                    projectedPath.lineTo(lng, lat);
                 } else {
-                    path->moveTo(x,y,z);
-                    projectedPath->moveTo(lng, lat);
+                    path.moveTo(x,y,z);
+                    projectedPath.moveTo(lng, lat);
                 }
 
                 oldiPart = iPart;
@@ -179,8 +179,8 @@ void ofApp::parseShapeFile(string fname) {
             }
         }
 
-        path->close();
-        projectedPath->close();
+        path.close();
+        projectedPath.close();
 
         shapes.push_back(path);
         projectedShapes.push_back(projectedPath);
@@ -222,18 +222,20 @@ void ofApp::reprojectShape() {
     projectedShapes.clear();
     for(vector< vector<geo> >::iterator gs = gshapes.begin(); gs != gshapes.end(); ++gs) {
         
-        ofPath* projectedPath = new ofPath();
-        projectedPath->setFilled(false);
-        projectedPath->setStrokeWidth(1);
+        ofPath projectedPath;
+        projectedPath.setFilled(false);
+        projectedPath.setStrokeWidth(1);
 
         for(vector<geo>::iterator gp = (*gs).begin(); gp!= (*gs).end(); ++gp) {
             double lat = (*gp).lat;
             double lng = (*gp).lng;
             int p = pj_transform(pjFrom, pjTo, 1, 1, &lng, &lat, NULL);
-            projectedPath->lineTo(lng, lat); 
+            if(gp == (*gs).begin())
+                projectedPath.moveTo(lng, lat);
+            else  
+                projectedPath.lineTo(lng, lat);
         }
-        projectedPath->close();
-
+        projectedPath.close();
         projectedShapes.push_back(projectedPath);
     }
 
@@ -269,8 +271,8 @@ void ofApp::draw() {
         ofTranslate(1024/2, 768/2, 0);
         ofScale(-s,s,1.0);
 
-        for(vector< ofPath* >::iterator shape = projectedShapes.begin(); shape != projectedShapes.end(); ++shape) {
-            (*shape)->draw();
+        for(vector< ofPath >::iterator shape = projectedShapes.begin(); shape != projectedShapes.end(); ++shape) {
+            (*shape).draw();
         }
 
         // for(vector< ofPath* >::iterator shape = shapes.begin(); shape != shapes.end(); ++shape) {
