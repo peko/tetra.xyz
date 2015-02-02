@@ -23,7 +23,9 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
-    void reprojectPaths();
+    void setProjection();
+    void parseShapeFile(string fname);
+    void reprojectShape();
 
     // shape file
     SHPHandle	hSHP;
@@ -48,10 +50,15 @@ public:
 
     string pjFromStr, pjToStr;
 
-    float lng, lat;
+    float proj_lng, proj_lat;
 
     ofxUISuperCanvas *gui0;
     void guiEvent(ofxUIEventArgs &e);
 
+    struct Geospatial {
+        Geospatial(double lat, double lng);
+        double lat, double lng;
+    };
 
+    vector< vector<Geospatial> > unprojectedShapes;  
 };

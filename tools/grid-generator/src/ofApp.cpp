@@ -1,55 +1,42 @@
 #include "ofApp.h"
 
 
-void ofApp::reprojectPaths() {
-
-    char buf[256];
-
-    pjFromStr = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
-    sprintf(buf, "+proj=laea +lat_0=%f +lon_0=%f +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs", lat, lng);
-    pjToStr  = (string) buf;
-
-    // projections
-    if (!(pjFrom = pj_init_plus(pjFromStr.c_str())) )
-       ofExit(1);
-    if (!(pjTo = pj_init_plus(pjToStr.c_str())) )
-       ofExit(1);
-}
 
 //--------------------------------------------------------------
+
 void ofApp::setup() {
     
     gui0 = new ofxUISuperCanvas("Controls");
 
-    lng = 0.0;
-    lat = 0.0;
+    proj_lng = 0.0;
+    proj_lat = 0.0;
 
     gui0->addSpacer();
     gui0->addLabel("Projection point");
-    gui0->addSlider("Lng", -180.0, 180.0, &lng);
-    gui0->addSlider("Lat",  -90.0,  90.0, &lat);
+    gui0->addSlider("Lng", -180.0, 180.0, &proj_lng);
+    gui0->addSlider("Lat",  -90.0,  90.0, &proj_lat);
     gui0->autoSizeToFitWidgets();
     ofAddListener(gui0->newGUIEvent,this,&ofApp::guiEvent);
 
     ofSetVerticalSync(true);
     ofSetDepthTest(true);
 
-    pjFromStr = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
-    pjToStr   = "+proj=laea +lat_0=90 +lon_0=90 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
-
-    // projections
-    if (!(pjFrom = pj_init_plus(pjFromStr.c_str())) )
-       ofExit(1);
-    if (!(pjTo = pj_init_plus(pjToStr.c_str())) )
-       ofExit(1);
+    setProjection();
+    parseShapeFile("data/ne_110m_admin_0_countries");
 
     sphere.set(200.0, 3);
+
+}
+
+//--------------------------------------------------------------
+
+void ofApp::parseShapeFile(string fname) {
 
     // shape file
     bValidate     = 0;
     nInvalidCount = 0;
     bHeaderOnly   = 0;
-    string fname = "data/ne_110m_admin_0_countries";
+    
     hSHP = SHPOpen( fname.c_str(), "rb" );
     
     if( hSHP == NULL ) {
@@ -91,9 +78,8 @@ void ofApp::setup() {
             break;
         }
 
-
+        /*
         if( shp->bMeasureIsUsed ) {
-            /*
             printf( "\nShape:%d (%s)  nVertices=%d, nParts=%d\n"
                     "  Bounds:(%.15g,%.15g, %.15g, %.15g)\n"
                     "      to (%.15g,%.15g, %.15g, %.15g)\n",
@@ -103,9 +89,8 @@ void ofApp::setup() {
                     shp->dfZMin, shp->dfMMin,
                     shp->dfXMax, shp->dfYMax,
                     shp->dfZMax, shp->dfMMax );
-            */
+            
         } else {
-            /*
             printf( "\nShape:%d (%s)  nVertices=%d, nParts=%d\n"
                     "  Bounds:(%.15g,%.15g, %.15g)\n"
                     "      to (%.15g,%.15g, %.15g)\n",
@@ -114,9 +99,9 @@ void ofApp::setup() {
                     shp->dfXMin, shp->dfYMin,
                     shp->dfZMin,
                     shp->dfXMax, shp->dfYMax,
-                    shp->dfZMax );
-            */
+                    shp->dfZMax );            
         }
+        */
 
         if( shp->nParts > 0 && shp->panPartStart[0] != 0 ) {
             fprintf( stderr, "panPartStart[0] = %d, not zero as expected.\n",
@@ -232,6 +217,36 @@ void ofApp::setup() {
 }
 
 //--------------------------------------------------------------
+void ofApp::setProjection() {
+
+    char buf[256];
+
+    pjFromStr = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
+    sprintf(buf, "+proj=laea +lat_0=%f +lon_0=%f +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs", proj_lat, proj_lng);
+    pjToStr  = (string) buf;
+
+    // projections
+    if (!(pjFrom = pj_init_plus(pjFromStr.c_str())) )
+       ofExit(1);
+    if (!(pjTo = pj_init_plus(pjToStr.c_str())) )
+       ofExit(1);
+}
+
+void ofApp::reprojectShape() {
+    // projectedShapes.clear();
+    // for(vector< ofPath* >::iterator shape = shapes.begin(); shape != shapes.end(); ++shape) {
+    //     vector<ofPath::Command> commands = (*shape)->getCommands();
+    //     for(vector<ofPath::Command>::iterator c = commands.begin(); c!=commands.end(); ++c){
+    //         ofPoint p = c.cp1;
+    //         printf("%f", p.)
+    //     }
+    // }
+
+
+}
+
+//--------------------------------------------------------------
+
 void ofApp::exit() {
     delete gui0;
 }
@@ -380,5 +395,5 @@ void ofApp::dragEvent(ofDragInfo dragInfo) {
 //--------------------------------------------------------------
 void ofApp::guiEvent(ofxUIEventArgs &e) {
     // printf("UI Event\n");
-    reprojectPaths();
+    reprojectShape();
 }
