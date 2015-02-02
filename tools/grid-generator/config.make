@@ -137,5 +137,5 @@ PROJECT_LDFLAGS=-Wl,-rpath=./libs -lproj
 #		(default) PROJECT_CC = (blank)
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_CXX = 
+# PROJECT_CXX = colorgcc
 # PROJECT_CC = 

@@ -55,10 +55,10 @@ public:
     ofxUISuperCanvas *gui0;
     void guiEvent(ofxUIEventArgs &e);
 
-    struct Geospatial {
-        Geospatial(double lat, double lng);
-        double lat, double lng;
-    };
+    typedef struct geo {
+        double lng;
+        double lat;
+    } geo;
 
-    vector< vector<Geospatial> > unprojectedShapes;  
+    vector< vector<geo> > gshapes;  
 };

@@ -65,7 +65,7 @@ void ofApp::parseShapeFile(string fname) {
     mbrXmax = adfMaxBound[0];
     mbrYmax = adfMaxBound[1];
 
-
+    // shapes
     for( i = 0; i < nEntities && !bHeaderOnly; i++ ) {
 
         int  j;
@@ -78,35 +78,12 @@ void ofApp::parseShapeFile(string fname) {
             break;
         }
 
-        /*
-        if( shp->bMeasureIsUsed ) {
-            printf( "\nShape:%d (%s)  nVertices=%d, nParts=%d\n"
-                    "  Bounds:(%.15g,%.15g, %.15g, %.15g)\n"
-                    "      to (%.15g,%.15g, %.15g, %.15g)\n",
-                    i, SHPTypeName(shp->nSHPType),
-                    shp->nVertices, shp->nParts,
-                    shp->dfXMin, shp->dfYMin,
-                    shp->dfZMin, shp->dfMMin,
-                    shp->dfXMax, shp->dfYMax,
-                    shp->dfZMax, shp->dfMMax );
-            
-        } else {
-            printf( "\nShape:%d (%s)  nVertices=%d, nParts=%d\n"
-                    "  Bounds:(%.15g,%.15g, %.15g)\n"
-                    "      to (%.15g,%.15g, %.15g)\n",
-                    i, SHPTypeName(shp->nSHPType),
-                    shp->nVertices, shp->nParts,
-                    shp->dfXMin, shp->dfYMin,
-                    shp->dfZMin,
-                    shp->dfXMax, shp->dfYMax,
-                    shp->dfZMax );            
-        }
-        */
 
         if( shp->nParts > 0 && shp->panPartStart[0] != 0 ) {
             fprintf( stderr, "panPartStart[0] = %d, not zero as expected.\n",
                      shp->panPartStart[0] );
         }
+
 
         ofPath* path = new ofPath();
 
@@ -118,8 +95,11 @@ void ofApp::parseShapeFile(string fname) {
         projectedPath->setFillColor(ofColor(rand()/2.0+0.5, rand()/2.0+0.5, rand()/2.0+0.5, 224));
 
 
+        vector<geo> gshape;
         int oldiPart=-1;
+        // points
         for( j = 0, iPart = 1; j < shp->nVertices; j++ ) {
+
             const char  *pszPartType = "";
 
             if( j == 0 && shp->nParts > 0 )
@@ -159,6 +139,9 @@ void ofApp::parseShapeFile(string fname) {
                 float y = R*cos(lat)*sin(lng);
                 float z = R*sin(lat);
 
+                geo g = {lng, lat}; 
+                gshape.push_back(g);
+
                 int p = pj_transform(pjFrom, pjTo, 1, 1, &lng, &lat, NULL);
 
                 if(mbrXmin>lng) mbrXmin = lng;
@@ -182,6 +165,8 @@ void ofApp::parseShapeFile(string fname) {
                 oldiPart = iPart;
             }
         }
+
+        gshapes.push_back(gshape);
 
         if( bValidate ) {
             int nAltered = SHPRewindObject( hSHP, shp );
@@ -233,15 +218,14 @@ void ofApp::setProjection() {
 }
 
 void ofApp::reprojectShape() {
-    // projectedShapes.clear();
-    // for(vector< ofPath* >::iterator shape = shapes.begin(); shape != shapes.end(); ++shape) {
-    //     vector<ofPath::Command> commands = (*shape)->getCommands();
-    //     for(vector<ofPath::Command>::iterator c = commands.begin(); c!=commands.end(); ++c){
-    //         ofPoint p = c.cp1;
-    //         printf("%f", p.)
-    //     }
-    // }
+    setProjection();
+    projectedShapes.clear();
+    for(vector< vector<geo> >::itterator gs = gshapes.begin(); gs != gshapes.end(); ++gs) {
 
+        for(vector<geo>::iterator gp = (*gs).begin(); gp!= (*gs).end(); ++gp) {
+
+        }
+    }
 
 }
 
