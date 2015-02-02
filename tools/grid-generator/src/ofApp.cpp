@@ -220,11 +220,21 @@ void ofApp::setProjection() {
 void ofApp::reprojectShape() {
     setProjection();
     projectedShapes.clear();
-    for(vector< vector<geo> >::itterator gs = gshapes.begin(); gs != gshapes.end(); ++gs) {
+    for(vector< vector<geo> >::iterator gs = gshapes.begin(); gs != gshapes.end(); ++gs) {
+        
+        ofPath* projectedPath = new ofPath();
+        projectedPath->setFilled(false);
+        projectedPath->setStrokeWidth(1);
 
         for(vector<geo>::iterator gp = (*gs).begin(); gp!= (*gs).end(); ++gp) {
-
+            double lat = (*gp).lat;
+            double lng = (*gp).lng;
+            int p = pj_transform(pjFrom, pjTo, 1, 1, &lng, &lat, NULL);
+            projectedPath->lineTo(lng, lat); 
         }
+        projectedPath->close();
+
+        projectedShapes.push_back(projectedPath);
     }
 
 }
