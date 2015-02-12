@@ -8,8 +8,8 @@ void ofApp::setup() {
     
     gui0 = new ofxUISuperCanvas("Controls");
 
-    proj_lng = 0.0;
-    proj_lat = 0.0;
+    proj_lng = 90.0;
+    proj_lat = 90.0;
 
     gui0->addSpacer();
     gui0->addLabel("Projection point");
@@ -23,6 +23,7 @@ void ofApp::setup() {
 
     setProjection();
     parseShapeFile("data/ne_110m_admin_0_countries");
+    reprojectShape();
 
     sphere.set(200.0, 3);
 
@@ -85,16 +86,6 @@ void ofApp::parseShapeFile(string fname) {
         }
 
 
-        ofPath path;
-        ofPath projectedPath;
-        
-        //path->setFilled(false);
-        projectedPath.setFilled(false);
-        projectedPath.setStrokeWidth(1);
-        path.setFillColor(ofColor(rand()/2.0+0.5, rand()/2.0+0.5, rand()/2.0+0.5, 224));
-        projectedPath.setFillColor(ofColor(rand()/2.0+0.5, rand()/2.0+0.5, rand()/2.0+0.5, 224));
-
-
         vector<geo> gshape;
         int oldiPart=-1;
         // points
@@ -132,34 +123,47 @@ void ofApp::parseShapeFile(string fname) {
                        shp->padfZ[j],
                        pszPartType );
                 */
-                float R = 200.0;
+                // float R = 200.0;
                 double lng = shp->padfX[j]*DEG_TO_RAD;
                 double lat = shp->padfY[j]*DEG_TO_RAD;
-                float x = R*cos(lat)*cos(lng);
-                float y = R*cos(lat)*sin(lng);
-                float z = R*sin(lat);
+                // float x = R*cos(lat)*cos(lng);
+                // float y = R*cos(lat)*sin(lng);
+                // float z = R*sin(lat);
 
-                geo g = {lng, lat}; 
-                gshape.push_back(g);
+ 
 
-                int p = pj_transform(pjFrom, pjTo, 1, 1, &lng, &lat, NULL);
+                // int p = pj_transform(pjFrom, pjTo, 1, 1, &lng, &lat, NULL);
 
                 if(mbrXmin>lng) mbrXmin = lng;
                 if(mbrYmin>lat) mbrYmin = lat;
                 if(mbrXmax<lng) mbrXmax = lng;
                 if(mbrYmax<lat) mbrYmax = lat;
 
-                if(p)
-                    printf("%s\nlng: %f, lat: %f\n",pj_strerrno(p), lng, lat);
+                // if(p)
+                //     printf("%s\nlng: %f, lat: %f\n",pj_strerrno(p), lng, lat);
                 //else
                 //    printf("lng: %f, lat: %f\n", lng, lat);
 
                 if(oldiPart == iPart) {
-                    path.lineTo(x,y,z);
-                    projectedPath.lineTo(lng, lat);
+                    // path.lineTo(x,y,z);
+                    // projectedPath.lineTo(lng, lat);
+
+                    geo g = {lng, lat}; 
+                    gshape.push_back(g);
+
                 } else {
-                    path.moveTo(x,y,z);
-                    projectedPath.moveTo(lng, lat);
+                    
+                    // path.moveTo(x,y,z);
+                    // projectedPath.moveTo(lng, lat);
+                    
+                    // break;
+
+                    gshapes.push_back(gshape);
+                    gshape.clear();
+                    
+                    geo g = {lng, lat}; 
+                    gshape.push_back(g);
+
                 }
 
                 oldiPart = iPart;
@@ -179,11 +183,11 @@ void ofApp::parseShapeFile(string fname) {
             }
         }
 
-        path.close();
-        projectedPath.close();
+        // path.close();
+        // projectedPath.close();
 
-        shapes.push_back(path);
-        projectedShapes.push_back(projectedPath);
+        // shapes.push_back(path);
+        // projectedShapes.push_back(projectedPath);
 
         SHPDestroyObject( shp );
     }
@@ -218,11 +222,14 @@ void ofApp::setProjection() {
 }
 
 void ofApp::reprojectShape() {
+
     setProjection();
+    // printf("%d\n",gshapes.size() );
     projectedShapes.clear();
     for(vector< vector<geo> >::iterator gs = gshapes.begin(); gs != gshapes.end(); ++gs) {
         
         ofPath projectedPath;
+
         projectedPath.setFilled(false);
         projectedPath.setStrokeWidth(1);
 
@@ -230,6 +237,12 @@ void ofApp::reprojectShape() {
             double lat = (*gp).lat;
             double lng = (*gp).lng;
             int p = pj_transform(pjFrom, pjTo, 1, 1, &lng, &lat, NULL);
+            
+            if(mbrXmin>lng) mbrXmin = lng;
+            if(mbrYmin>lat) mbrYmin = lat;
+            if(mbrXmax<lng) mbrXmax = lng;
+            if(mbrYmax<lat) mbrYmax = lat;
+
             if(gp == (*gs).begin())
                 projectedPath.moveTo(lng, lat);
             else  
@@ -259,8 +272,8 @@ void ofApp::draw() {
 
     ofSetColor(255);
 
-    ofDrawBitmapString(pjFromStr,10,20);
-    ofDrawBitmapString(pjToStr  ,10,40);
+    // ofDrawBitmapString(pjFromStr,10,20);
+    // ofDrawBitmapString(pjToStr  ,10,40);
 
     // gui0->draw();
 
