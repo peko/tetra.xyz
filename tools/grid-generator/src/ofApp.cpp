@@ -54,7 +54,13 @@ void ofApp::parseShapeFile(string fname) {
 
     printf("DBF records: %d\n", DBFGetRecordCount(hDBF));
     printf("DBF fields: %d\n", DBFGetFieldCount(hDBF));
-    
+    for(int f=0; f<DBFGetFieldCount(hDBF); ++f) {
+        char buff[256];
+        DBFGetFieldInfo(hDBF, f, buff, NULL, NULL);
+        printf("%04d: %s\n", f, buff);
+    }    
+    // char admin = ;
+    int adminId = DBFGetFieldIndex(hDBF, "admin");
 
     SHPGetInfo( hSHP, &nEntities, &nShapeType, adfMinBound, adfMaxBound );
 
@@ -78,6 +84,7 @@ void ofApp::parseShapeFile(string fname) {
     mbrYmax = adfMaxBound[1];
 
     // shapes
+    printf("Parse shapes\n");
     for( i = 0; i < nEntities && !bHeaderOnly; i++ ) {
 
         int  j;
@@ -96,6 +103,9 @@ void ofApp::parseShapeFile(string fname) {
                      shp->panPartStart[0] );
         }
 
+        const char * name = DBFReadStringAttribute(hDBF, i, adminId);
+
+        printf("%04d: %s\n", i, name);
 
         vector<geo> gshape;
         int oldiPart=-1;
