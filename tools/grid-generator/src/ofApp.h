@@ -27,8 +27,11 @@ public:
     void parseShapeFile(string fname);
     void reprojectShape();
 
-    // shape file
-    SHPHandle	hSHP;
+    // shape file andle
+    SHPHandle   hSHP;
+    // dbf file handle
+    DBFHandle	hDBF;
+
     int		    nShapeType, nEntities, i, iPart, bValidate,nInvalidCount;
     int         bHeaderOnly;
     const char 	*pszPlus;

@@ -38,12 +38,23 @@ void ofApp::parseShapeFile(string fname) {
     nInvalidCount = 0;
     bHeaderOnly   = 0;
     
-    hSHP = SHPOpen( fname.c_str(), "rb" );
-    
+    // open shape
+    hSHP = SHPOpen( fname.c_str(), "rb");
     if( hSHP == NULL ) {
-        printf( "Unable to open:%s\n", fname.c_str() );
+        printf( "Unable to open Shape:%s\n", fname.c_str() );
         ofExit(1);
     }
+
+    // open dbf
+    hDBF = DBFOpen( fname.c_str(), "rb");
+    if( hDBF == NULL ) {
+        printf( "Unable to open DBF:%s\n", fname.c_str() );
+        ofExit(1);
+    }
+
+    printf("DBF records: %d\n", DBFGetRecordCount(hDBF));
+    printf("DBF fields: %d\n", DBFGetFieldCount(hDBF));
+    
 
     SHPGetInfo( hSHP, &nEntities, &nShapeType, adfMinBound, adfMaxBound );
 
@@ -195,6 +206,7 @@ void ofApp::parseShapeFile(string fname) {
     printf("MBR\n   min: %f, %f;\n   max: %f, %f\n", mbrXmin, mbrYmin, mbrXmax, mbrYmax);
 
     SHPClose( hSHP );
+    DBFClose( hDBF);
 
     if( bValidate ) {
         printf( "%d object has invalid ring orderings.\n", nInvalidCount );
@@ -236,7 +248,8 @@ void ofApp::reprojectShape() {
         for(vector<geo>::iterator gp = (*gs).begin(); gp!= (*gs).end(); ++gp) {
             double lat = (*gp).lat;
             double lng = (*gp).lng;
-            int p = pj_transform(pjFrom, pjTo, 1, 1, &lng, &lat, NULL);
+
+            pj_transform(pjFrom, pjTo, 1, 1, &lng, &lat, NULL);
             
             if(mbrXmin>lng) mbrXmin = lng;
             if(mbrYmin>lat) mbrYmin = lat;
