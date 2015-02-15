@@ -6,17 +6,10 @@
 
 void ofApp::setup() {
     
-    gui0 = new ofxUISuperCanvas("Controls");
-
     proj_lng = 90.0;
     proj_lat = 90.0;
 
-    gui0->addSpacer();
-    gui0->addLabel("Projection point");
-    gui0->addSlider("Lng", -180.0, 180.0, &proj_lng);
-    gui0->addSlider("Lat",  -90.0,  90.0, &proj_lat);
-    gui0->autoSizeToFitWidgets();
-    ofAddListener(gui0->newGUIEvent,this,&ofApp::guiEvent);
+	// ---------------------------------------
 
     ofSetVerticalSync(true);
     ofSetDepthTest(true);
@@ -25,7 +18,40 @@ void ofApp::setup() {
     parseShapeFile("data/ne_110m_admin_0_countries");
     reprojectShape();
 
-    sphere.set(200.0, 3);
+	// ----------------------------------------
+
+// sphere.set(200.0, 3);
+	initGUI();
+}
+
+//--------------------------------------------------------------
+
+void ofApp::initGUI(){
+
+	gui0 = new ofxUISuperCanvas("Controls");
+	gui1 = new ofxUIScrollableCanvas();
+
+
+    gui0->addSpacer();
+    gui0->addLabel("Projection point");
+    gui0->addSlider("Lng", -180.0, 180.0, &proj_lng);
+    gui0->addSlider("Lat",  -90.0,  90.0, &proj_lat);
+    gui0->autoSizeToFitWidgets();
+    ofAddListener(gui0->newGUIEvent,this,&ofApp::guiEvent);
+	
+	//gui0->setWidgetFontSize(OFX_UI_FONT_SMALL);
+    //ddl = gui0->addDropDownList("Cities", names);
+    //ddl->setAllowMultiple(false);
+	//gui0->setDrawWidgetPadding(true);
+	gui0->autoSizeToFitWidgets();
+
+	gui1 = new ofxUIScrollableCanvas(0,0,ofGetWidth(),ofGetHeight());    
+    gui1->setScrollAreaToScreen();
+    gui1->setScrollableDirections(false, true);
+	gui1->autoSizeToFitWidgets();
+	gui1->toggleVisible();
+    // gui1->getRect()->setWidth(ofGetWidth());
+	gui1->autoSizeToFitWidgets();
 
 }
 
@@ -104,8 +130,8 @@ void ofApp::parseShapeFile(string fname) {
         }
 
         const char * name = DBFReadStringAttribute(hDBF, i, adminId);
-
         printf("%04d: %s\n", i, name);
+		gui1->addButton(name, false);
 
         vector<geo> gshape;
         int oldiPart=-1;
@@ -248,6 +274,7 @@ void ofApp::reprojectShape() {
     setProjection();
     // printf("%d\n",gshapes.size() );
     projectedShapes.clear();
+
     for(vector< vector<geo> >::iterator gs = gshapes.begin(); gs != gshapes.end(); ++gs) {
         
         ofPath projectedPath;
@@ -273,11 +300,49 @@ void ofApp::reprojectShape() {
         }
         projectedPath.close();
         projectedShapes.push_back(projectedPath);
-    }
+	}
+
+	int sLng = 18;
+	int sLat = 8;
+	
+	longitudes.clear();
+	longitudes.setFilled(false);
+	longitudes.setStrokeColor(ofColor(255.0,50.0));
+	longitudes.setStrokeWidth(1);
+
+	for(int lng=-sLng; lng<= sLng; ++lng) {
+		for(int lat=-sLat;lat<=sLat;++lat) {
+			double pLng = lng*10.0*DEG_TO_RAD;
+			double pLat = lat*10.0*DEG_TO_RAD;
+			int pj = pj_transform(pjFrom, pjTo, 1, 1, &pLng, &pLat, NULL);
+			if(pj) printf("%s\n", pj_strerrno(pj));
+			if(lat == -sLat) longitudes.moveTo(pLng, pLat);
+			else longitudes.lineTo(pLng, pLat);
+		}
+		//longitudes.close();
+	}
+	
+	latitudes.clear();
+	latitudes.setFilled(false);
+	latitudes.setStrokeColor(ofColor(255.0,50.0));
+	latitudes.setStrokeWidth(1);
+
+	for(int lat=-sLat;lat<=sLat;++lat) {
+		for(int lng=-sLng;lng<=sLng;++lng) {
+			double pLng = lng*10*DEG_TO_RAD;
+			double pLat = lat*10*DEG_TO_RAD;
+			int pj = pj_transform(pjFrom, pjTo, 1, 1, &pLng, &pLat, NULL);
+			if(pj) printf("%s\n", pj_strerrno(pj));
+			if(lng == -sLng) latitudes.moveTo(pLng,pLat);
+			latitudes.lineTo(pLng, pLat);
+		}
+		//latitudes.close();
+	}
 
 }
 
 //--------------------------------------------------------------
+
 
 void ofApp::exit() {
     delete gui0;
@@ -310,6 +375,10 @@ void ofApp::draw() {
         for(vector< ofPath >::iterator shape = projectedShapes.begin(); shape != projectedShapes.end(); ++shape) {
             (*shape).draw();
         }
+
+		longitudes.draw();
+		latitudes.draw();
+
 
         // for(vector< ofPath* >::iterator shape = shapes.begin(); shape != shapes.end(); ++shape) {
         //  (*shape)->draw();

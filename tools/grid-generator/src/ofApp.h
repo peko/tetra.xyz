@@ -26,6 +26,8 @@ public:
     void setProjection();
     void parseShapeFile(string fname);
     void reprojectShape();
+	void initGUI();
+
 
     // shape file andle
     SHPHandle   hSHP;
@@ -38,6 +40,8 @@ public:
     double 	adfMinBound[4], adfMaxBound[4];
     vector<ofPath> shapes;
     vector<ofPath> projectedShapes;
+	ofPath latitudes;
+	ofPath longitudes;
 
 	ofIcoSpherePrimitive sphere;
 
@@ -56,7 +60,10 @@ public:
     float proj_lng, proj_lat;
 
     ofxUISuperCanvas *gui0;
+	ofxUIScrollableCanvas *gui1;
+
     void guiEvent(ofxUIEventArgs &e);
+	ofxUIDropDownList *ddl;
 
     typedef struct geo {
         double lng;
